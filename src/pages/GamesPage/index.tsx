@@ -15,34 +15,34 @@ import { Select } from "antd";
 
 const GamesPage = () => {
    const dispatch = useAppDispatch();
-   const games = useAppSelector((state) => state.games);
-   const genres = useAppSelector((state) => state.genres);
-   const platforms = useAppSelector((state) => state.platforms);
-   const developers = useAppSelector((state) => state.developers);
-   const gamesStores = useAppSelector((state) => state.gamesStores);
+   const gamesState = useAppSelector((state) => state.games);
+   const genresState = useAppSelector((state) => state.genres);
+   const platformsState = useAppSelector((state) => state.platforms);
+   const developersState = useAppSelector((state) => state.developers);
+   const gamesStoresState = useAppSelector((state) => state.gamesStores);
 
-   const { totalPages, filteredGames, loadingFiltredGames, error } = games;
+   const genres = genresState.genres;
+   const platforms = platformsState.platforms;
+   const developers = developersState.developers;
+   const gamesStores = gamesStoresState.gamesStores;
+
+   const { totalPages, filteredGames, loadingFiltredGames, error } = gamesState;
 
    const [filters, setFilters] = useState<GameFilters>({});
    const [currentPage, setCurrentPage] = useState<number>(1);
    const pageSize = 20;
 
    useEffect(() => {
-      if (!genres.genres?.length) dispatch(fetchGenres());
-      if (!platforms.platforms?.length) dispatch(fetchPlatforms());
-      if (!developers.developers?.length) dispatch(fetchDevelopers());
-      if (!gamesStores.gamesStores?.length) dispatch(fetchGamesStores());
+      if (!genres?.length) dispatch(fetchGenres());
+      if (!platforms?.length) dispatch(fetchPlatforms());
+      if (!developers?.length) dispatch(fetchDevelopers());
+      if (!gamesStores?.length) dispatch(fetchGamesStores());
    }, [dispatch, genres, platforms, developers, gamesStores]);
 
    useEffect(() => {
-      // Fetch games initially without filters and with initial pagination
-      dispatch(fetchFilteredGames({ ...filters, page: currentPage, page_size: pageSize }));
-   }, [dispatch, filters, currentPage, pageSize]);
-
-   useEffect(() => {
-      const newFilters = { ...filters, page: currentPage };
+      const newFilters = { ...filters, page: currentPage, page_size: pageSize };
       dispatch(fetchFilteredGames(newFilters));
-   }, [dispatch, filters, currentPage]);
+   }, [dispatch, filters, currentPage, pageSize]);
 
    const { Option } = Select;
    const handleFilterChange = (value: string, filterType: keyof GameFilters) => {
@@ -91,7 +91,7 @@ const GamesPage = () => {
                            onChange={(value) => handleFilterChange(value as string, "genres")}
                         >
                            <Option value="">Select genre</Option>
-                           {genres.genres.map((genre) => (
+                           {genres?.map((genre) => (
                               <Option key={genre.id} value={genre.id}>
                                  {genre.name}
                               </Option>
@@ -105,7 +105,7 @@ const GamesPage = () => {
                            onChange={(value) => handleFilterChange(value as string, "platforms")}
                         >
                            <Option value="">Select platform</Option>
-                           {platforms.platforms.map((platform) => (
+                           {platforms?.map((platform) => (
                               <Option key={platform.id} value={platform.id}>
                                  {platform.name}
                               </Option>
@@ -119,7 +119,7 @@ const GamesPage = () => {
                            onChange={(value) => handleFilterChange(value as string, "developers")}
                         >
                            <Option value="">Select developer</Option>
-                           {developers.developers.map((developer) => (
+                           {developers?.map((developer) => (
                               <Option key={developer.id} value={developer.id}>
                                  {developer.name}
                               </Option>
@@ -133,7 +133,7 @@ const GamesPage = () => {
                            onChange={(value) => handleFilterChange(value as string, "stores")}
                         >
                            <Option value="">Select store</Option>
-                           {gamesStores.gamesStores.map((gamesStore) => (
+                           {gamesStores?.map((gamesStore) => (
                               <Option key={gamesStore.id} value={gamesStore.id}>
                                  {gamesStore.name}
                               </Option>

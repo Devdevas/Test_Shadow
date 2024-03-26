@@ -85,6 +85,7 @@ export const Screenshot = styled.img`
    height: auto;
 `;
 
-export const GameDetails = styled.div`
-   padding: 20px;
+export const SameSeriesTitle = styled.div`
+   font-size: ${(props) => props.theme.fontSizes.larger};
+   margin: 80px 0 35px 0;
 `;

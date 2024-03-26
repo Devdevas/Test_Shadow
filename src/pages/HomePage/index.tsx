@@ -14,8 +14,8 @@ const HomePage = () => {
    const { games, loading, error } = useAppSelector((state) => state.games);
 
    useEffect(() => {
-      dispatch(fetchGames());
-   }, [dispatch]);
+      if (!games.length) dispatch(fetchGames());
+   }, [dispatch, games]);
 
    const latestGames: Game[] = useMemo(() => {
       // Sort and slice games to obtain the last 20 games released
