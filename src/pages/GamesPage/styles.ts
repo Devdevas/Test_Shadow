@@ -1,16 +1,19 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Select as AntSelect, Pagination } from "antd";
+
+interface Props {
+   active?: boolean;
+}
 
 export const GamesContainer = styled.div`
    padding: 20px;
 `;
 
-export const GamesTitle = styled.div`
+export const GamesTitle = styled.h1`
    font-size: ${(props) => props.theme.fontSizes.larger};
    margin: 0 0 35px 0;
    @media screen and (max-width: 490px) {
-     font-size: ${(props) => props.theme.fontSizes.large};
+      font-size: ${(props) => props.theme.fontSizes.large};
    }
 `;
 
@@ -39,14 +42,14 @@ export const SelectContainer = styled.div`
    gap: 10px;
 `;
 
-export const StyledSelect = styled(AntSelect)`
+export const StyledSelect = styled(AntSelect)<Props>`
    width: 180px;
    .ant-select-selector {
       background-color: ${(props) => props.theme.colors.backgroundBlack}!important;
    }
    .ant-select-selection-item,
    .ant-select-selection-placeholder {
-      color: ${(props) => props.theme.colors.grayText}!important;
+      color: ${(props) => (props.active ? props.theme.colors.whiteText : props.theme.colors.grayText)}!important;
    }
 
    @media screen and (max-width: 1054px) {
@@ -83,16 +86,20 @@ export const StyledPagination = styled(Pagination)`
    }
 `;
 
-export const SelectItem = styled.div``;
+export const SelectItem = styled.div`
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+`;
 
 export const SortContainer = styled.div`
    width: 200px;
 `;
 
-export const Label = styled.div`
+export const Label = styled.label`
    color: ${(props) => props.theme.colors.whiteText};
    font-size: ${(props) => props.theme.fontSizes.medium};
-   font-weight: ${(props) => props.theme.fontWeights.medium};
+   font-weight: ${(props) => props.theme.fontWeights.small};
    margin-bottom: 7px;
 `;
 
@@ -100,51 +107,4 @@ export const GamesGrid = styled.div`
    display: grid;
    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
    gap: 20px;
-`;
-
-export const StyledLink = styled(Link)`
-   text-decoration: none;
-   color: inherit;
-   &:hover {
-      text-decoration: none;
-   }
-`;
-export const DropdownButton = styled.button`
-   padding: 8px 16px;
-   border-radius: 20px;
-   background-color: #007bff;
-   color: white;
-   border: none;
-   cursor: pointer;
-   font-size: 1rem;
-   margin: 0 5px 10px 0;
-`;
-
-export const DropdownContent = styled.div<{ isVisible: boolean }>`
-   display: ${({ isVisible }) => (isVisible ? "block" : "none")};
-   position: absolute;
-   background-color: #f1f1f1;
-   min-width: 160px;
-   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-   z-index: 1;
-   border-radius: 5px;
-   padding: 12px 16px;
-
-   button {
-      background-color: transparent;
-      color: black;
-      padding: 10px 20px;
-      border: none;
-      text-align: left;
-      display: block;
-      width: 100%;
-      &:hover {
-         background-color: #ddd;
-      }
-   }
-`;
-
-export const DropdownContainer = styled.div`
-   position: relative;
-   display: inline-block;
 `;

@@ -45,6 +45,21 @@ export const fetchFilteredGames = createAsyncThunk<ApiResponse<Game[]>, GameFilt
    }
 );
 
+export const fetchSearchedGames = createAsyncThunk<ApiResponse<Game[]>, GameFilters, { rejectValue: string }>(
+   "games/fetchSearchedGames",
+   async (searchParams, { rejectWithValue }) => {
+      try {
+         // Build query params from searchParams
+         const params = new URLSearchParams(searchParams as any).toString();
+         const response = await axiosInstance.get<ApiResponse<Game[]>>(`/games?${params}`);
+         return response.data;
+      } catch (error) {
+         const axiosError = error as AxiosError;
+         return rejectWithValue("Failed to search games! " + axiosError.message);
+      }
+   }
+);
+
 export const fetchGamesFromSeries = createAsyncThunk<Game[], string, { rejectValue: string }>(
    "games/fetchGamesFromSeries",
    async (gameId, { rejectWithValue }) => {

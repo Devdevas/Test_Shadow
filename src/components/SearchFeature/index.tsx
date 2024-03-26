@@ -1,23 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as S from "./style";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { fetchFilteredGames } from "../../redux/slices/games/gamesActions";
+import { fetchSearchedGames } from "../../redux/slices/games/gamesActions";
 import ErrorCard from "../ErrorCard";
 import { IoMdCloseCircle } from "react-icons/io";
 import LoaderPoints from "../LoaderPoints";
 import { formatPlatformsNames } from "../../shared/utils/formatPlatformsNames";
+import { StyledLink } from "../../shared/styles/styles";
 
 const SearchBar = () => {
    const dispatch = useAppDispatch();
    const [searchTerm, setSearchTerm] = useState("");
    const [showResults, setShowResults] = useState(false);
 
-   const { filteredGames, loadingFiltredGames, error } = useAppSelector((state) => state.games);
+   const { searchedGames, loadingSearchedGames, error } = useAppSelector((state) => state.games);
 
-   //Start games search only if 2 characters or more have been entered
+   //Start searching games only if 2 characters or more have been entered
    useEffect(() => {
       if (searchTerm.length >= 2) {
-         dispatch(fetchFilteredGames({ search: searchTerm }));
+         dispatch(fetchSearchedGames({ search: searchTerm, page: 1, page_size: 20 }));
          setShowResults(true);
       } else {
          setShowResults(false);
@@ -56,13 +57,13 @@ const SearchBar = () => {
                   <IoMdCloseCircle size={20} />
                </S.CloseIcon>
                <S.SearchResults>
-                  {loadingFiltredGames && <LoaderPoints />}
+                  {loadingSearchedGames && <LoaderPoints />}
                   {error && <ErrorCard message={error} />}
-                  {!loadingFiltredGames &&
+                  {!loadingSearchedGames &&
                      !error &&
-                     filteredGames.length > 0 &&
-                     filteredGames.map((game) => (
-                        <S.StyledLink key={game.id} to={`/games/${game.id}`}>
+                     searchedGames.length > 0 &&
+                     searchedGames.map((game) => (
+                        <StyledLink key={game.id} to={`/games/${game.id}`}>
                            <S.SearchResultItem onClick={handleCloseResultsMenu}>
                               <S.GameCover>
                                  <img src={game.background_image} alt="Game cover" />
@@ -73,9 +74,12 @@ const SearchBar = () => {
                                  <S.GamePlatforms>{formatPlatformsNames(game.platforms)}</S.GamePlatforms>
                               </S.GameInfos>
                            </S.SearchResultItem>
-                        </S.StyledLink>
+                        </StyledLink>
                      ))}
-                  {!loadingFiltredGames && !error && !filteredGames.length && "No games found!"}
+                  <StyledLink to={`/games?search=${encodeURIComponent(searchTerm)}`} onClick={handleCloseResultsMenu}>
+                     <S.ViewAll>View all</S.ViewAll>
+                  </StyledLink>
+                  {!loadingSearchedGames && !error && !searchedGames.length && "No games found!"}
                </S.SearchResults>
             </>
          )}

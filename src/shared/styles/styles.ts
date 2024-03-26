@@ -1,10 +1,11 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const PageContainer = styled.div`
    max-width: 1200px;
    min-height: 100vh;
    margin: auto;
-   padding: 20px;
+   padding: 40px;
 `;
 
 export const NoResults = styled.div`
@@ -15,4 +16,12 @@ export const NoResults = styled.div`
    border-radius: ${(props) => props.theme.borderRadius.small};
    background-color: ${(props) => props.theme.colors.backgroundGrayLighter};
    color: ${(props) => props.theme.colors.grayText};
+`;
+
+export const StyledLink = styled(Link)`
+   text-decoration: none;
+   color: inherit;
+   &:hover {
+      text-decoration: none;
+   }
 `;

@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchGameMovies } from "../../redux/slices/games/gamesActions";
-import GameTrailer from "../../components/GameMovies";
+import GameTrailer from "../../components/GameTrailer";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { PageContainer } from "../../shared/styles/styles";
+import { NoResults, PageContainer } from "../../shared/styles/styles";
 import Loader from "../../components/Loader";
 import ErrorCard from "../../components/ErrorCard";
+import * as S from "./styles";
 
 const GameMoviesPage = () => {
    const { gameId } = useParams<{ gameId: string }>();
@@ -14,21 +15,24 @@ const GameMoviesPage = () => {
 
    useEffect(() => {
       if (gameId) dispatch(fetchGameMovies(gameId));
-   }, [gameId, dispatch]);
+   }, [dispatch, gameId]);
 
    return (
       <PageContainer>
          {loadingGameMovies && <Loader />}
          {error && <ErrorCard message={error} />}
-         <h1>Game Trailers</h1>
-         {!loadingGameMovies &&
-            !error &&
-            gameMovies &&
-            (gameMovies.length > 0 ? (
-               gameMovies.map((movie) => <GameTrailer key={movie.id} trailer={movie} />)
-            ) : (
-               <p>No trailers available for this game.</p>
-            ))}
+
+         <S.Title>Game Trailers</S.Title>
+         <S.TrailersContainer>
+            {!loadingGameMovies &&
+               !error &&
+               gameMovies &&
+               (gameMovies.length ? (
+                  gameMovies.map((movie) => <GameTrailer key={movie.id} trailer={movie} />)
+               ) : (
+                  <NoResults>No trailers available for this game.</NoResults>
+               ))}
+         </S.TrailersContainer>
       </PageContainer>
    );
 };

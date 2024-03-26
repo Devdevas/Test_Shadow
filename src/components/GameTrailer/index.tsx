@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import { GameMovie } from "../../redux/slices/games/gamesTypes";
+import { MdOutlinePlayCircleFilled } from "react-icons/md";
+import * as S from "./style";
 
 Modal.setAppElement("#root");
 
@@ -15,14 +17,29 @@ const GameTrailer = ({ trailer }: Props) => {
    const closeModal = () => setModalIsOpen(false);
 
    return (
-      <div>
-         <button onClick={openModal}>Watch Trailer</button>
+      <>
+         <S.TrailerContainer>
+            <S.TrailerCover src={trailer.preview} />
+            <S.TrailerTitle>
+               <S.IconContainer>
+                  <MdOutlinePlayCircleFilled
+                     size={80}
+                     style={{ marginRight: "10px", cursor: "pointer" }}
+                     onClick={openModal}
+                  />
+               </S.IconContainer>
+               <S.TrailerName>{trailer.name}</S.TrailerName>
+            </S.TrailerTitle>
+         </S.TrailerContainer>
          <Modal
             isOpen={modalIsOpen}
             onRequestClose={closeModal}
             contentLabel="Game Trailer"
             style={{
                content: {
+                  display: "Flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
                   top: "50%",
                   left: "50%",
                   right: "auto",
@@ -30,17 +47,17 @@ const GameTrailer = ({ trailer }: Props) => {
                   marginRight: "-50%",
                   transform: "translate(-50%, -50%)",
                   width: "80%",
-                  maxHeight: "80vh",
+                  background: "black",
                },
             }}
          >
-            <video controls width="100%">
+            <S.CloseButton onClick={closeModal}>Close</S.CloseButton>
+            <video autoPlay controls width="100%">
                <source src={trailer.data.max} type="video/mp4" />
                Your browser does not support the video tag.
             </video>
-            <button onClick={closeModal}>Close</button>
          </Modal>
-      </div>
+      </>
    );
 };
 

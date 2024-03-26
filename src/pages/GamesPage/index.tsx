@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NoResults, PageContainer } from "../../shared/styles/styles";
+import { NoResults, PageContainer, StyledLink } from "../../shared/styles/styles";
 import { fetchFilteredGames } from "../../redux/slices/games/gamesActions";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import GameCard from "../../components/GameCard";
@@ -12,6 +12,7 @@ import { fetchPlatforms } from "../../redux/slices/platforms/platformsActions";
 import { fetchDevelopers } from "../../redux/slices/developers/developersActions";
 import { fetchGamesStores } from "../../redux/slices/gamesStores/gamesStoresActions";
 import { Select } from "antd";
+import { useLocation } from "react-router-dom";
 
 const GamesPage = () => {
    const dispatch = useAppDispatch();
@@ -26,11 +27,22 @@ const GamesPage = () => {
    const developers = developersState.developers;
    const gamesStores = gamesStoresState.gamesStores;
 
-   const { totalPages, filteredGames, loadingFiltredGames, error } = gamesState;
+   const { totalGames, filteredGames, loadingFiltredGames, error } = gamesState;
 
-   const [filters, setFilters] = useState<GameFilters>({});
    const [currentPage, setCurrentPage] = useState<number>(1);
    const pageSize = 20;
+
+   const location = useLocation();
+   const getSearchTermFromQuery = (query: any) => {
+      const params = new URLSearchParams(query);
+      return params.get("search") || "";
+   };
+
+   const [filters, setFilters] = useState<GameFilters>({
+      search: getSearchTermFromQuery(location.search),
+      page: 1,
+      page_size: pageSize,
+   });
 
    useEffect(() => {
       if (!genres?.length) dispatch(fetchGenres());
@@ -38,6 +50,17 @@ const GamesPage = () => {
       if (!developers?.length) dispatch(fetchDevelopers());
       if (!gamesStores?.length) dispatch(fetchGamesStores());
    }, [dispatch, genres, platforms, developers, gamesStores]);
+
+   useEffect(() => {
+      const searchTerm = getSearchTermFromQuery(location.search);
+      //Update filters by adding searchTerm
+      setFilters((prevFilters) => ({
+         ...prevFilters,
+         search: searchTerm,
+         page: currentPage,
+         page_size: pageSize,
+      }));
+   }, [location.search, currentPage, pageSize]);
 
    useEffect(() => {
       const newFilters = { ...filters, page: currentPage, page_size: pageSize };
@@ -78,113 +101,120 @@ const GamesPage = () => {
 
    return (
       <PageContainer>
-         <S.GamesContainer>
-            <S.GamesTitle>List of all games</S.GamesTitle>
-            <S.FiltersContainer>
-               <div>
-                  <S.FiltersTitle>Filters:</S.FiltersTitle>
-                  <S.SelectContainer>
-                     <S.SelectItem>
-                        <S.Label>By genre</S.Label>
-                        <S.StyledSelect
-                           placeholder="Select Genre"
-                           onChange={(value) => handleFilterChange(value as string, "genres")}
-                        >
-                           <Option value="">Select genre</Option>
-                           {genres?.map((genre) => (
-                              <Option key={genre.id} value={genre.id}>
-                                 {genre.name}
-                              </Option>
-                           ))}
-                        </S.StyledSelect>
-                     </S.SelectItem>
-                     <S.SelectItem>
-                        <S.Label>By platform</S.Label>
-                        <S.StyledSelect
-                           placeholder="Select Platform"
-                           onChange={(value) => handleFilterChange(value as string, "platforms")}
-                        >
-                           <Option value="">Select platform</Option>
-                           {platforms?.map((platform) => (
-                              <Option key={platform.id} value={platform.id}>
-                                 {platform.name}
-                              </Option>
-                           ))}
-                        </S.StyledSelect>
-                     </S.SelectItem>
-                     <S.SelectItem>
-                        <S.Label>By developer</S.Label>
-                        <S.StyledSelect
-                           placeholder="Select developer"
-                           onChange={(value) => handleFilterChange(value as string, "developers")}
-                        >
-                           <Option value="">Select developer</Option>
-                           {developers?.map((developer) => (
-                              <Option key={developer.id} value={developer.id}>
-                                 {developer.name}
-                              </Option>
-                           ))}
-                        </S.StyledSelect>
-                     </S.SelectItem>
-                     <S.SelectItem>
-                        <S.Label>By store</S.Label>
-                        <S.StyledSelect
-                           placeholder="Select games store"
-                           onChange={(value) => handleFilterChange(value as string, "stores")}
-                        >
-                           <Option value="">Select store</Option>
-                           {gamesStores?.map((gamesStore) => (
-                              <Option key={gamesStore.id} value={gamesStore.id}>
-                                 {gamesStore.name}
-                              </Option>
-                           ))}
-                        </S.StyledSelect>
-                     </S.SelectItem>
-                  </S.SelectContainer>
-               </div>
-               <S.SelectItem>
-                  <S.Label>Sort</S.Label>
-                  <S.StyledSelect
-                     placeholder="Sort by"
-                     onChange={(value) => handleFilterChange(value as string, "ordering")}
-                  >
-                     <Option value="">Default</Option>
-                     {orderOptions.map((option) => (
-                        <Option key={option.value} value={option.value}>
-                           {option.label}
-                        </Option>
-                     ))}
-                  </S.StyledSelect>
-               </S.SelectItem>
-            </S.FiltersContainer>
-
-            {loadingFiltredGames && <Loader />}
-            {error && <ErrorCard message={error} />}
-            {!loadingFiltredGames &&
-               !error &&
-               (filteredGames && filteredGames.length ? (
-                  <>
-                     <S.GamesGrid>
-                        {filteredGames.map((game) => (
-                           <S.StyledLink key={game.id} to={`/games/${game.id}`}>
-                              <GameCard game={game} />
-                           </S.StyledLink>
+         <S.GamesTitle>List of all games</S.GamesTitle>
+         <S.FiltersContainer>
+            <div>
+               <S.FiltersTitle>Filters:</S.FiltersTitle>
+               <S.SelectContainer>
+                  <S.SelectItem>
+                     <S.Label>By genre</S.Label>
+                     <S.StyledSelect
+                        active={!!filters.genres}
+                        placeholder="Select Genre"
+                        onChange={(value) => handleFilterChange(value as string, "genres")}
+                     >
+                        <Option value="">Select genre</Option>
+                        {genres?.map((genre) => (
+                           <Option key={genre.id} value={genre.id}>
+                              {genre.name}
+                           </Option>
                         ))}
-                     </S.GamesGrid>
-                     <S.PaginationContainer>
-                        <S.StyledPagination
-                           current={currentPage}
-                           onChange={handlePageChange}
-                           total={totalPages * pageSize}
-                           pageSize={pageSize}
-                           showSizeChanger={false}
-                        />
-                     </S.PaginationContainer>
-                  </>
-               ) : (
-                  <NoResults>No games found!</NoResults>
-               ))}
-         </S.GamesContainer>
+                     </S.StyledSelect>
+                  </S.SelectItem>
+                  <S.SelectItem>
+                     <S.Label>By platform</S.Label>
+                     <S.StyledSelect
+                        active={!!filters.platforms}
+                        placeholder="Select Platform"
+                        onChange={(value) => handleFilterChange(value as string, "platforms")}
+                     >
+                        <Option value="">Select platform</Option>
+                        {platforms?.map((platform) => (
+                           <Option key={platform.id} value={platform.id}>
+                              {platform.name}
+                           </Option>
+                        ))}
+                     </S.StyledSelect>
+                  </S.SelectItem>
+                  <S.SelectItem>
+                     <S.Label>By developer</S.Label>
+                     <S.StyledSelect
+                        active={!!filters.developers}
+                        placeholder="Select developer"
+                        onChange={(value) => handleFilterChange(value as string, "developers")}
+                     >
+                        <Option value="">Select developer</Option>
+                        {developers?.map((developer) => (
+                           <Option key={developer.id} value={developer.id}>
+                              {developer.name}
+                           </Option>
+                        ))}
+                     </S.StyledSelect>
+                  </S.SelectItem>
+                  <S.SelectItem>
+                     <S.Label>By store</S.Label>
+                     <S.StyledSelect
+                        active={!!filters.stores}
+                        placeholder="Select games store"
+                        onChange={(value) => handleFilterChange(value as string, "stores")}
+                     >
+                        <Option value="">Select store</Option>
+                        {gamesStores?.map((gamesStore) => (
+                           <Option key={gamesStore.id} value={gamesStore.id}>
+                              {gamesStore.name}
+                           </Option>
+                        ))}
+                     </S.StyledSelect>
+                  </S.SelectItem>
+               </S.SelectContainer>
+            </div>
+            <S.SelectItem>
+               <S.Label>Sort</S.Label>
+               <S.StyledSelect
+                  active={!!filters.ordering}
+                  placeholder="Sort by"
+                  onChange={(value) => handleFilterChange(value as string, "ordering")}
+               >
+                  <Option value="">Default</Option>
+                  {orderOptions.map((option) => (
+                     <Option key={option.value} value={option.value}>
+                        {option.label}
+                     </Option>
+                  ))}
+               </S.StyledSelect>
+            </S.SelectItem>
+         </S.FiltersContainer>
+
+         {loadingFiltredGames && <Loader />}
+         {error && error !== "Failed to fetch filtred games! The requested resource couldn't be found." && (
+            <ErrorCard message={error} />
+         )}
+         {!loadingFiltredGames &&
+            !error &&
+            (filteredGames && filteredGames.length ? (
+               <>
+                  <S.GamesGrid>
+                     {filteredGames.map((game) => (
+                        <StyledLink key={game.id} to={`/games/${game.id}`}>
+                           <GameCard game={game} />
+                        </StyledLink>
+                     ))}
+                  </S.GamesGrid>
+                  <S.PaginationContainer>
+                     <S.StyledPagination
+                        current={currentPage}
+                        onChange={handlePageChange}
+                        total={totalGames}
+                        pageSize={pageSize}
+                        showSizeChanger={false}
+                     />
+                  </S.PaginationContainer>
+               </>
+            ) : null)}
+         {!filteredGames.length ||
+            (error && error === "Failed to fetch filtred games! The requested resource couldn't be found." && (
+               <NoResults>No games found!</NoResults>
+            ))}
       </PageContainer>
    );
 };

@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const CardContainer = styled.div`
@@ -23,14 +22,6 @@ export const GameTitle = styled.div`
    background-color: ${(props) => props.theme.colors.backgroundGrayLighter};
    padding: 20px 0;
    color: ${(props) => props.theme.colors.whiteText};
-`;
-
-export const StyledLink = styled(Link)`
-   text-decoration: none;
-   color: inherit;
-   &:hover {
-      text-decoration: none;
-   }
 `;
 
 export const TrailerContainer = styled.div`

@@ -9,6 +9,8 @@ import ErrorCard from "../../components/ErrorCard";
 import { MdStar } from "react-icons/md";
 import { formatPlatformsNames } from "../../shared/utils/formatPlatformsNames";
 import CarouselGames from "../../components/Carousels/CarouselGames";
+import { MdOutlinePlayCircleFilled } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const GameDetailsPage = () => {
    const { gameId } = useParams<{ gameId: string }>();
@@ -50,12 +52,22 @@ const GameDetailsPage = () => {
                         <S.InfosItem>
                            <strong>Genre:</strong>{" "}
                            {gameDetails.genres?.map((genre) => (
-                              <S.Genre key={genre.id}>{genre.name}</S.Genre>
+                              <S.GenreBadge key={genre.id}>{genre.name}</S.GenreBadge>
                            ))}
                         </S.InfosItem>
-                        <S.InfosItem>
+                        <S.InfosItem title={gameDetails.description_raw}>
                            <strong>Description:</strong> {gameDetails.description_raw}
                         </S.InfosItem>
+                        <S.WatchTrailerContainer>
+                           <Link to={`/games/${gameDetails.id}/movies`}>
+                              <MdOutlinePlayCircleFilled
+                                 color="white"
+                                 size={25}
+                                 style={{ marginRight: "10px", cursor: "pointer" }}
+                              />
+                           </Link>
+                           <S.WatchTrailerText>Watch trailers</S.WatchTrailerText>
+                        </S.WatchTrailerContainer>
                      </S.GameInfo>
                   </S.GameHeader>
                   <S.ScreenshotsTitle>Screenshots</S.ScreenshotsTitle>

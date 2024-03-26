@@ -50,19 +50,31 @@ export const InfosItem = styled.div`
    margin: 10px 0;
    color: ${(props) => props.theme.colors.grayText};
    display: -webkit-box;
-   -webkit-line-clamp: 7;
+   -webkit-line-clamp:5;
    -webkit-box-orient: vertical;
    overflow: hidden;
    text-overflow: ellipsis;
    line-height: 1.3;
 `;
 
-export const Genre = styled.div`
+export const WatchTrailerContainer = styled.div`
+   display: flex;
+   align-items: center;
+   margin-top: 20px;
+`;
+
+export const WatchTrailerText = styled.p`
+   color: ${(props) => props.theme.colors.grayText};
+   font-size: ${(props) => props.theme.fontSizes.medium};
+   font-weight: ${(props) => props.theme.fontWeights.medium};
+`;
+
+export const GenreBadge = styled.div`
    background-color: ${(props) => props.theme.colors.primary};
    color: ${(props) => props.theme.colors.whiteText};
-   padding: 5px 12px;
+   padding: 3px 10px;
    border-radius: 15px;
-   font-size: 16px;
+   font-size: 13px;
    display: inline-block;
    margin: 5px;
 `;

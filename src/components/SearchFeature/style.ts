@@ -33,11 +33,6 @@ export const SearchBarInput = styled.input`
    background-color: ${(props) => props.theme.colors.backgroundGray};
 `;
 
-export const StyledLink = styled(Link)`
-   text-decoration: none;
-   color: ${(props) => props.theme.colors.whiteText};
-`;
-
 export const SearchResults = styled.div`
    position: absolute;
    z-index: 2;
@@ -75,6 +70,7 @@ export const SearchResultItem = styled.div`
       background-color: ${(props) => props.theme.colors.backgroundBlack};
    }
 `;
+
 export const GameCover = styled.div`
    width: 40px;
    height: 60px;
@@ -94,14 +90,26 @@ export const GameInfos = styled.div`
    height: 60px;
    margin-left: 10px;
 `;
-export const GameName = styled.div``;
-export const GameDate = styled.div`
+export const GameName = styled.h3``;
+
+export const GameDate = styled.p`
    color: ${(props) => props.theme.colors.grayText};
    font-size: ${(props) => props.theme.fontSizes.medium};
    font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
-export const GamePlatforms = styled.div`
+
+export const GamePlatforms = styled.p`
    color: ${(props) => props.theme.colors.grayText};
    font-size: ${(props) => props.theme.fontSizes.small};
    font-weight: ${(props) => props.theme.fontWeights.medium};
+`;
+export const ViewAll = styled.p`
+   color: ${(props) => props.theme.colors.primary};
+   font-size: ${(props) => props.theme.fontSizes.medium};
+   font-weight: ${(props) => props.theme.fontWeights.medium};
+   margin: 15px auto;
+   width: 100px;
+   &:hover {
+      text-decoration: underline;
+   }
 `;

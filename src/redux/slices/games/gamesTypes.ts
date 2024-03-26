@@ -5,13 +5,15 @@ import { GamesStore } from "../gamesStores/gamesStoresTypes";
 export interface GamesState {
    games: Game[];
    filteredGames: Game[];
-   totalPages: number;
+   searchedGames: Game[];
+   totalGames: number;
    gameDetails: Game | null;
    gamesFromSeries: Game[];
    gameMovies: GameMovie[] | null;
    gameScreenshots: Screenshot[] | null;
    loading: boolean;
    loadingFiltredGames: boolean;
+   loadingSearchedGames: boolean;
    loadingScreenshots: boolean;
    loadingGameMovies: boolean;
    error: string | null;

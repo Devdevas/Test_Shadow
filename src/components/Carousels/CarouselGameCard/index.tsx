@@ -4,6 +4,7 @@ import { MdOutlinePlayCircleFilled } from "react-icons/md";
 import { MdStar } from "react-icons/md";
 import * as S from "./style";
 import { Link } from "react-router-dom";
+import { StyledLink } from "../../../shared/styles/styles";
 
 interface props {
    game: Game;
@@ -29,7 +30,7 @@ const CarouselGameCard = ({ game }: props) => {
                {game.rating}
             </S.Rating>
             <S.GameName title={game.name}>{game.name}</S.GameName>
-            <S.StyledLink to={`/games/${game.id}/movies`}>
+            <StyledLink to={`/games/${game.id}/movies`}>
                <S.TrailerContainer>
                   <MdOutlinePlayCircleFilled
                      color="white"
@@ -38,7 +39,7 @@ const CarouselGameCard = ({ game }: props) => {
                   />
                   <S.GameSubTitle>Watch trailer</S.GameSubTitle>
                </S.TrailerContainer>
-            </S.StyledLink>
+            </StyledLink>
          </S.GameTitle>
       </S.CardContainer>
    );

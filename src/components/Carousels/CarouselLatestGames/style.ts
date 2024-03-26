@@ -21,10 +21,11 @@ export const GameTitle = styled.div`
    }
 `;
 
-export const GameName = styled.div`
+export const GameName = styled.h2`
    font-size: ${(props) => props.theme.fontSizes.larger};
    font-weight: ${(props) => props.theme.fontWeights.medium};
 `;
+
 export const GameSubTitle = styled.p`
    color: ${(props) => props.theme.colors.grayText};
    font-size: ${(props) => props.theme.fontSizes.large};

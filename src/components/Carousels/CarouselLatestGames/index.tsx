@@ -55,7 +55,7 @@ const CarouselLatestGames = ({ games }: Props) => {
                   </Link>
                   <div>
                      <S.GameName>{game.name}</S.GameName>
-                     <S.GameSubTitle>Watch trailer</S.GameSubTitle>
+                     <S.GameSubTitle>Watch trailers</S.GameSubTitle>
                   </div>
                </S.GameTitle>
             </SwiperSlide>

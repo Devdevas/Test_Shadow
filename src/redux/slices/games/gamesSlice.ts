@@ -6,6 +6,7 @@ import {
    fetchGames,
    fetchGameScreenShots,
    fetchGamesFromSeries,
+   fetchSearchedGames,
 } from "./gamesActions";
 import { Game, GameMovie, GamesState, Screenshot } from "./gamesTypes";
 import { ApiResponse } from "../sharedTypes";
@@ -13,13 +14,15 @@ import { ApiResponse } from "../sharedTypes";
 const initialState: GamesState = {
    games: [],
    filteredGames: [],
-   totalPages: 0,
+   searchedGames: [],
+   totalGames: 0,
    gameDetails: null,
    gamesFromSeries: [],
    gameMovies: [],
    gameScreenshots: [],
    loading: false,
    loadingFiltredGames: false,
+   loadingSearchedGames: false,
    loadingGameMovies: false,
    loadingScreenshots: false,
    error: null,
@@ -68,13 +71,29 @@ export const gamesSlice = createSlice({
          })
          .addCase(fetchFilteredGames.fulfilled, (state, action: PayloadAction<ApiResponse<Game[]>>) => {
             state.filteredGames = action.payload.results;
-            state.totalPages = action.payload.count;
+            state.totalGames = action.payload.count;
             state.loadingFiltredGames = false;
             state.error = null;
          })
          .addCase(fetchFilteredGames.rejected, (state, action) => {
             state.loadingFiltredGames = false;
             state.error = action.payload ?? "Failed to fetch filtered games";
+         });
+      builder
+         //Manage searched games state according to response's status
+         .addCase(fetchSearchedGames.pending, (state) => {
+            state.loadingSearchedGames = true;
+            state.error = null;
+         })
+         .addCase(fetchSearchedGames.fulfilled, (state, action: PayloadAction<ApiResponse<Game[]>>) => {
+            state.searchedGames = action.payload.results;
+            state.totalGames = action.payload.count;
+            state.loadingSearchedGames = false;
+            state.error = null;
+         })
+         .addCase(fetchSearchedGames.rejected, (state, action) => {
+            state.loadingSearchedGames = false;
+            state.error = action.payload ?? "Failed to fetch searched games";
          });
       builder
          //Manage games from series state according to response's status
